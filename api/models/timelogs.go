@@ -7,3 +7,7 @@ type TimeLog struct {
 	UserId uint
 	Type   string
 }
+
+type TimeLogBody struct {
+	Type string `json:"type"`
+}

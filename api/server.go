@@ -6,6 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	"am/office-check-in/database"
 	"am/office-check-in/minio_config"
@@ -42,11 +43,17 @@ func main() {
 
 	e := echo.New()
 
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
+
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
 	routes.AddAuth(e)
+	routes.AddTimeLogs(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
