@@ -8,6 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"am/office-check-in/database"
+	"am/office-check-in/minio_config"
+	"am/office-check-in/routes"
 )
 
 func main() {
@@ -21,6 +23,18 @@ func main() {
 	}
 
 	database.Connect(dsn, dbName)
+	database.Migrate()
+
+	minioEndpoint := os.Getenv("MINIO_ENDPOINT")
+	minioBucket := os.Getenv("MINIO_BUCKET")
+	minioAccessKeyID := os.Getenv("MINIO_ACCESS_KEY")
+	minioSecretAccessKey := os.Getenv("MINIO_SECRET_KEY")
+
+	if minioEndpoint == "" || minioBucket == "" || minioAccessKeyID == "" || minioSecretAccessKey == "" {
+		panic("MINIO_ENDPOINT, MINIO_BUCKET, MINIO_ACCESS_KEY_ID, MINIO_SECRET_ACCESS_KEY are not set")
+	}
+
+	minio_config.Connect(minioEndpoint, minioBucket, minioAccessKeyID, minioSecretAccessKey)
 
 	if err != nil {
 		panic(err)
@@ -31,6 +45,8 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
+
+	routes.AddAuth(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

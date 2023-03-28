@@ -13,11 +13,6 @@ def hello_world():
 def create_qr():
   data = request.args.get('data')
   buff = qr_service.make_qr_buffer(data)
-  
-  bytes = buff.getvalue()
-  
-  with open("my_file.png", "wb") as f:
-    f.write(bytes)
     
   response = make_response(buff.getvalue())
   return response
