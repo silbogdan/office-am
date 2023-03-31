@@ -54,6 +54,7 @@ func main() {
 
 	routes.AddAuth(e)
 	routes.AddTimeLogs(e)
+	routes.AddFile(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
