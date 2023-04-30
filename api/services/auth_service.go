@@ -68,5 +68,15 @@ func Login(email string, password string) (string, error) {
 		return "", err
 	}
 
+	// Verify sequence
+	// parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) { return []byte(os.Getenv("JWT_SECRET")), nil })
+
+	// if err != nil {
+	// 	return "", err
+	// }
+
+	// name := parsedToken.Claims.(jwt.MapClaims)["name"]
+	// fmt.Printf("Got name %s\n", name)
+
 	return tokenString, nil
 }
