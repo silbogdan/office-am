@@ -45,7 +45,7 @@ func main() {
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
 
 	e.GET("/", func(c echo.Context) error {
@@ -53,8 +53,9 @@ func main() {
 	})
 
 	routes.AddAuth(e)
-	routes.AddTimeLogs(e)
+	routes.AddEmployees(e)
 	routes.AddFile(e)
+	routes.AddTimeLogs(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

@@ -3,12 +3,10 @@ import { useRouter } from "next/router";
 
 import Navbar from "../navbar";
 
-export default function Layout({ children }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   let token: string | null = null;
-  const router = useRouter();
 
   if (typeof window !== "undefined") {
-    console.log("Getting token");
     token = localStorage.getItem("token");
   }
 
@@ -18,6 +16,6 @@ export default function Layout({ children }) {
       {children}
     </div>
   ) : (
-    <div></div>
+    <div>You are not authorized to view this page</div>
   );
 }
