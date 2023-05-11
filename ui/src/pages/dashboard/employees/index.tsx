@@ -6,16 +6,10 @@ import { Icon, Label, Table } from "semantic-ui-react";
 
 import { differenceInHours } from "date-fns";
 
-const Layout = dynamic(() => import("../../../components/layout"), { ssr: false });
+import { TimeLog } from "../logs";
+import Link from "next/link";
 
-export interface TimeLog {
-  ID: number;
-  CreatedAt: string;
-  UpdatedAt: string;
-  DeletedAt: string;
-  UserId: number;
-  Type: "entrance" | "exit";
-}
+const Layout = dynamic(() => import("../../../components/layout"), { ssr: false });
 
 export interface Employee {
   ID: number;
@@ -49,8 +43,6 @@ const EmployeesPage: NextPageWithLayout = () => {
 
       const resJson = await res.json();
 
-      console.log("Got employees:", resJson.employees);
-
       const fetchedEmployees = resJson.employees as Employee[] | undefined;
 
       if (fetchedEmployees) setEmployees(fetchedEmployees);
@@ -74,7 +66,9 @@ const EmployeesPage: NextPageWithLayout = () => {
               <Table.Cell>
                 <img alt="profile" src={e.picture} width={50} height={50} />
               </Table.Cell>
-              <Table.Cell>{e.name}</Table.Cell>
+              <Table.Cell>
+                <Link href={`/employees/${e.ID}`}>{e.name}</Link>
+              </Table.Cell>
               <Table.Cell>{e.email}</Table.Cell>
               <Table.Cell verticalAlign="middle" collapsing textAlign="right">
                 <img alt="qr-code" src={e.qrCodeUrl} width={50} height={50} />

@@ -60,7 +60,7 @@ func CreateUser(user models.UserBody) (models.User, error) {
 		Password:  user.Password,
 		Picture:   user.Picture,
 		QrCodeId:  qrCodeData,
-		QrCodeUrl: info.Location,
+		QrCodeUrl: info.Key,
 	}
 
 	dbConnection.Create(&newUser)

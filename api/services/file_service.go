@@ -43,8 +43,8 @@ func Upload(file multipart.File, filename string, contentType string) (string, e
 		return "", err
 	}
 
-	// 3. Return url
-	return info.Location, nil
+	// 3. Return filename
+	return info.Key, nil
 }
 
 func GetFileUrl(filename string) (string, error) {

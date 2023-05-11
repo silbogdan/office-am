@@ -13,7 +13,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const login = () => {
+  const login = (e: React.ChangeEvent) => {
+    e.preventDefault();
+
     axios.post<{ token: string }>(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, { email, password }).then((res) => {
       localStorage.setItem("token", res.data.token);
       router.push("/dashboard");
@@ -26,7 +28,7 @@ export default function LoginPage() {
         <Header as="h1">
           <p>Log in to Admin Portal</p>
         </Header>
-        <div className={styles["hor-container"]}>
+        <form className={styles["hor-container"]}>
           <Input placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
           <Input
             type="password"
@@ -35,14 +37,16 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className={styles["buttons-container"]}>
-            <Button color="green" onClick={login}>
+            <Button type="submit" color="green" onClick={(e) => login(e)}>
               Log In
             </Button>
             <Link href="/">
-              <Button color="red">Cancel</Button>
+              <Button type="button" color="red">
+                Cancel
+              </Button>
             </Link>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

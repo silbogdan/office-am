@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/dashboard",
+        destination: "/dashboard/employees",
+        permanent: true,
+      },
+    ];
+  },
   headers: () => [
     {
       source: "/dashboard/employees",

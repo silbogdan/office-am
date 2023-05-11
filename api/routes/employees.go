@@ -13,11 +13,24 @@ func AddEmployees(e *echo.Echo) {
 	g := e.Group("/employees")
 
 	g.Use(middlewares.AuthWithToken)
-	g.GET("", getAll)
+	g.GET("", getAllEmployees)
+	g.GET("/logs", getAllTimeLogs)
 	g.GET("/logs/:id", getLogs)
 }
 
-func getAll(c echo.Context) error {
+func getAllTimeLogs(c echo.Context) error {
+	timeLogs, err := services.GetAllTimeLogs()
+
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"timeLogs": timeLogs,
+	})
+}
+
+func getAllEmployees(c echo.Context) error {
 	users, err := services.GetAllEmployees()
 
 	if err != nil {

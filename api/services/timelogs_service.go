@@ -1,13 +1,16 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 
 	"am/office-check-in/database"
+	"am/office-check-in/minio_config"
 	"am/office-check-in/models"
 )
 
@@ -52,10 +55,31 @@ func Scan(entranceType string) (models.TimeLogResponse, error) {
 
 	dbConnection.Create(&timelog)
 
+	minioClient, bucket := minio_config.Client()
+
+	picUrl, err := minioClient.PresignedGetObject(context.Background(), bucket, user.Picture, SEVEN_DAYS_IN_NANOSECONDS, url.Values{})
+
+	if err != nil {
+		return models.TimeLogResponse{}, errors.New("failed to sign url")
+	}
+
 	// Return timelog
 	return models.TimeLogResponse{
 		Type:    timelog.Type,
 		Name:    user.Name,
-		Picture: user.Picture,
+		Picture: picUrl.String(),
 	}, nil
+}
+
+func GetAllTimeLogs() ([]models.TimeLog, error) {
+	var timeLogs []models.TimeLog
+
+	dbConnection := database.Connection()
+	dbConnection.Order("created_at desc").Find(&timeLogs)
+
+	if len(timeLogs) < 1 {
+		return timeLogs, errors.New("did not find any logs")
+	}
+
+	return timeLogs, nil
 }
